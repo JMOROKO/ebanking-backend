@@ -1,6 +1,6 @@
-package entities;
+package com.enset.ebankingbackend.entities;
 
-import enums.OperationType;
+import com.enset.ebankingbackend.enums.OperationType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,7 +16,9 @@ public class AccountOperation {
     private Long id;
     private Date operationDate;
     private double amount;
+    @Enumerated(EnumType.STRING)
     private OperationType type;
     @ManyToOne
     private BankAccount bankAccount;
+    private String description;
 }
