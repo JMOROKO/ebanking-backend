@@ -28,7 +28,7 @@ public class BankAccountRestController {
         return bankAccountService.bankAccountList();
     }
 
-    @GetMapping("/account/{accountId}/opatations")
+    @GetMapping("/accounts/{accountId}/operations")
     public List<AccountOperationDTO> getHistory(@PathVariable String accountId){
         return bankAccountService.accountOparationHistrory(accountId);
     }
