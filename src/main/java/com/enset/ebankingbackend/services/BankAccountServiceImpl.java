@@ -88,6 +88,14 @@ public class BankAccountServiceImpl implements BankAccountService{
         return customerDTOS;
     }
     @Override
+    public List<CustomerDTO> searchCustomers(String keyword) {
+        List<Customer> customers = customerRepository.searchCustomer(keyword);
+        List<CustomerDTO> customerDTOS = customers.stream().map(
+                cust -> dtoMapper.fromCustomer(cust)
+        ).collect(Collectors.toList());
+        return customerDTOS;
+    }
+    @Override
     public CustomerDTO getCustomer(Long id) throws CustomerNotFoundException {
         Customer customer = customerRepository.findById(id).orElseThrow(()->new CustomerNotFoundException("Customer not found"));
 
