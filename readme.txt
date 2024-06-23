@@ -10,3 +10,7 @@
 9- Realisation des services
 10- Réalisation de l'implémentation des services
 11- Creation des controller
+12- Mise en place des exceptions
+13- Mise en place de la sécurité inMemory
+14- Authentification JDBC
+15- Authentification userDetailsService

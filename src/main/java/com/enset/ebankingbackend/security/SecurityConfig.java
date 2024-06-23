@@ -28,12 +28,17 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import javax.crypto.spec.SecretKeySpec;
-import java.util.List;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity(prePostEnabled = true)
+@EnableMethodSecurity
 public class SecurityConfig {
+    /**
+     * Suite pour la sec
+     * 1- JDBC Authentication : https://www.youtube.com/watch?v=Haz3wLiQ5-0
+     * 2- UserDetailService : https://www.youtube.com/watch?v=RTiS9ygyYs4
+     * Role et Authorities : https://www.youtube.com/watch?v=2HYeoCvFmbI
+     */
     @Value("${jwt.secret}")
     private String secretKey;
     @Bean

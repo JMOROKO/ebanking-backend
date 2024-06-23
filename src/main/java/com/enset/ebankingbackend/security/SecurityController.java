@@ -27,9 +27,11 @@ public class SecurityController {
 
     @PostMapping("/login")
     public Map<String, String> login(String username, String password){
+        //authentification du user
         Authentication authenticate = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(username, password)
         );
+        //generation du JWT
         Instant instant = Instant.now();
         String scope = authenticate.getAuthorities().stream().map(a -> a.getAuthority()).collect(Collectors.joining(" "));
         JwtClaimsSet jwtClaimsSet = JwtClaimsSet.builder()
