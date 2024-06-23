@@ -22,12 +22,14 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import javax.crypto.spec.SecretKeySpec;
+import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
@@ -41,13 +43,19 @@ public class SecurityConfig {
      */
     @Value("${jwt.secret}")
     private String secretKey;
-    @Bean
+    //@Bean
     public InMemoryUserDetailsManager inMemoryUserDetailsManager(){
         PasswordEncoder passwordEncoder = passwordEncoder();
         return new InMemoryUserDetailsManager(
                 User.withUsername("user1").password(passwordEncoder.encode("12345")).authorities("USER").build(),
                 User.withUsername("admin").password(passwordEncoder.encode("12345")).authorities("USER", "ADMIN").build()
         );
+    }
+
+    @Bean
+    public JdbcUserDetailsManager jdbcUserDetailsManager(DataSource dataSource){ //DataSource dataSource represente ici la base de données
+        // pour utiliser JWT il faut creer deux tables dans la base de données USER et ROLE
+        return new JdbcUserDetailsManager(dataSource);
     }
 
     @Bean

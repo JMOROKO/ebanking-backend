@@ -11,6 +11,7 @@
 10- Réalisation de l'implémentation des services
 11- Creation des controller
 12- Mise en place des exceptions
-13- Mise en place de la sécurité inMemory
-14- Authentification JDBC
-15- Authentification userDetailsService
+13- Mise en place de la sécurité avec la strategie inMemory
+14- Comment créer des tables dans la base de données à partir d'un schéma de DB
+14- Mise en place de la sécurité avec la strategie Authentification JDBC
+15- Mise en place de la sécurité avec la strategie Authentification userDetailsService

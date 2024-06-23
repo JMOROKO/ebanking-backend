@@ -1,7 +1,6 @@
 package com.enset.ebankingbackend.web;
 
 import com.enset.ebankingbackend.dto.CustomerDTO;
-import com.enset.ebankingbackend.entities.Customer;
 import com.enset.ebankingbackend.exceptions.CustomerNotFoundException;
 import com.enset.ebankingbackend.services.BankAccountService;
 import lombok.AllArgsConstructor;
@@ -20,13 +19,15 @@ public class CustomerRestController {
 
 
     @GetMapping("/customers")
+    //@PreAuthorize("hasAuthority('SCOPE_USER')") //pour strategie inMemory
     @PreAuthorize("hasAuthority('SCOPE_USER')")
     public List<CustomerDTO> customers(){
         return bankAccountService.listCustomers();
     }
 
     @GetMapping("/customers/search")
-    @PreAuthorize("hasAuthority('SCOPE_USER')")
+    //@PreAuthorize("hasAuthority('SCOPE_ROLE_USER')") pour la strategie JDBC
+    @PreAuthorize("hasAuthority('SCOPE_ROLE_USER')")
     public List<CustomerDTO> searchCustomers(@RequestParam(name="keyword", defaultValue = "") String keyword){
         return bankAccountService.searchCustomers("%"+keyword+"%");
     }

@@ -5,30 +5,30 @@ import com.enset.ebankingbackend.dto.CurrentAccountDTO;
 import com.enset.ebankingbackend.dto.CustomerDTO;
 import com.enset.ebankingbackend.dto.SavingAccountDTO;
 import com.enset.ebankingbackend.entities.*;
-import com.enset.ebankingbackend.enums.AccountStatus;
-import com.enset.ebankingbackend.enums.OperationType;
 import com.enset.ebankingbackend.exceptions.BalanceNotSufficentException;
 import com.enset.ebankingbackend.exceptions.BankAccountNotFoundException;
 import com.enset.ebankingbackend.exceptions.CustomerNotFoundException;
 import com.enset.ebankingbackend.mappers.BankAccountMapperImpl;
-import com.enset.ebankingbackend.repositories.AccountOperationRepository;
-import com.enset.ebankingbackend.repositories.BankAccountRepository;
-import com.enset.ebankingbackend.repositories.CustomerRepository;
 import com.enset.ebankingbackend.services.BankAccountService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 
-import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Stream;
 
 
 @SpringBootApplication
 public class EbankingBackendApplication {
 
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 	public static void main(String[] args) {
 		SpringApplication.run(EbankingBackendApplication.class, args);
 	}
@@ -71,5 +71,37 @@ public class EbankingBackendApplication {
 				});
 			});
 		};
+	}
+
+	@Bean
+	CommandLineRunner commandLineRunner(JdbcUserDetailsManager jdbcUserDetailsManager){
+
+
+
+		return args -> {
+			init(jdbcUserDetailsManager);
+		};
+	}
+
+	private void init(JdbcUserDetailsManager jdbcUserDetailsManager){
+		UserDetails user1 = jdbcUserDetailsManager.loadUserByUsername("user1");
+		if(user1 != null)
+			return ;
+
+		jdbcUserDetailsManager.createUser(
+				User.withUsername("user1")
+						.password(passwordEncoder.encode("12345"))
+						.roles("USER").build()
+		);
+		jdbcUserDetailsManager.createUser(
+				User.withUsername("admin")
+						.password(passwordEncoder.encode("12345"))
+						.roles("ADMIN").build()
+		);
+		jdbcUserDetailsManager.createUser(
+				User.withUsername("admin2")
+						.password(passwordEncoder.encode("12345"))
+						.roles("USER","ADMIN").build()
+		);
 	}
 }
