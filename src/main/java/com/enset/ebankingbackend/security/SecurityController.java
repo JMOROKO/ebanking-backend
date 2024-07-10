@@ -27,10 +27,12 @@ public class SecurityController {
 
     @PostMapping("/login")
     public Map<String, String> login(String username, String password){
+        System.out.println("JE SUIS ICI");
         //authentification du user
         Authentication authenticate = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(username, password)
+            new UsernamePasswordAuthenticationToken(username, password)
         );
+        System.out.println("JE SUIS LA EGALEMENT");
         //generation du JWT
         Instant instant = Instant.now();
         String scope = authenticate.getAuthorities().stream().map(a -> a.getAuthority()).collect(Collectors.joining(" "));

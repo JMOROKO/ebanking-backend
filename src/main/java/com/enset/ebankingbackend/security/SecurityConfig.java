@@ -1,5 +1,6 @@
 package com.enset.ebankingbackend.security;
 
+import com.enset.ebankingbackend.security.services.UserDetailServiceImpl;
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -43,6 +44,15 @@ public class SecurityConfig {
      */
     @Value("${jwt.secret}")
     private String secretKey;
+
+    private UserDetailServiceImpl userDetailServiceImpl;
+
+    public SecurityConfig(UserDetailServiceImpl userDetailServiceImpl) {
+        this.userDetailServiceImpl = userDetailServiceImpl;
+    }
+
+
+    // strategie in memory
     //@Bean
     public InMemoryUserDetailsManager inMemoryUserDetailsManager(){
         PasswordEncoder passwordEncoder = passwordEncoder();
@@ -52,7 +62,8 @@ public class SecurityConfig {
         );
     }
 
-    @Bean
+    //strategie JDBC
+    //@Bean
     public JdbcUserDetailsManager jdbcUserDetailsManager(DataSource dataSource){ //DataSource dataSource represente ici la base de données
         // pour utiliser JWT il faut creer deux tables dans la base de données USER et ROLE
         return new JdbcUserDetailsManager(dataSource);
@@ -63,16 +74,28 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    // @TODO 8. partie de la stratégie userdetails modification de cette méthode
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
                 .sessionManagement( sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS) )
                 .csrf( csrf -> csrf.disable() )
                 .cors(Customizer.withDefaults())
-                .authorizeHttpRequests( ar -> ar.requestMatchers("/auth/login/**").permitAll() )
+                .authorizeHttpRequests( ar -> ar.requestMatchers(
+                        "/auth/login/**",
+                        "/v2/api-docs",
+                        "/v3/api-docs",
+                        "/v3/api-docs/**",
+                        "/swagger-resources",
+                        "/swagger-resources/**",
+                        "/configuration/ui",
+                        "/configuration/security",
+                        "/swagger-ui/**",
+                        "/swagger-ui.html").permitAll() )
                 .authorizeHttpRequests( ar -> ar.anyRequest().authenticated() )
                 //.httpBasic( Customizer.withDefaults() )
                 .oauth2ResourceServer(oa -> oa.jwt(Customizer.withDefaults()))
+                .userDetailsService(userDetailServiceImpl) //une fois qu'un utilisateur saisi son username et son password spring sec fait appel à l'implémentation de userDetailServiceImpl il va ensuite comparer les mot de passe saisi par l'utilisateur afin de le laisser passer ou non
                 .build();
     }
 

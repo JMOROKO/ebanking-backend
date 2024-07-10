@@ -9,6 +9,7 @@ import com.enset.ebankingbackend.exceptions.BalanceNotSufficentException;
 import com.enset.ebankingbackend.exceptions.BankAccountNotFoundException;
 import com.enset.ebankingbackend.exceptions.CustomerNotFoundException;
 import com.enset.ebankingbackend.mappers.BankAccountMapperImpl;
+import com.enset.ebankingbackend.security.services.AccountService;
 import com.enset.ebankingbackend.services.BankAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -27,8 +28,8 @@ import java.util.stream.Stream;
 @SpringBootApplication
 public class EbankingBackendApplication {
 
-	@Autowired
-	private PasswordEncoder passwordEncoder;
+	/*@Autowired
+	private PasswordEncoder passwordEncoder;*/
 	public static void main(String[] args) {
 		SpringApplication.run(EbankingBackendApplication.class, args);
 	}
@@ -73,11 +74,8 @@ public class EbankingBackendApplication {
 		};
 	}
 
-	@Bean
-	CommandLineRunner commandLineRunner(JdbcUserDetailsManager jdbcUserDetailsManager){
-
-
-
+	//@Bean
+	/*CommandLineRunner commandLineRunnerJdbc(JdbcUserDetailsManager jdbcUserDetailsManager){
 		return args -> {
 			init(jdbcUserDetailsManager);
 		};
@@ -103,5 +101,22 @@ public class EbankingBackendApplication {
 						.password(passwordEncoder.encode("12345"))
 						.roles("USER","ADMIN").build()
 		);
+	}*/
+
+	@Bean
+	CommandLineRunner commandLineRunnerUserDetails(AccountService accountService){
+		return args -> {
+			accountService.addNewRole("USER");
+			accountService.addNewRole("ADMIN");
+
+			accountService.addNewUser("user1", "12345", "user1@gmail.com", "12345");
+			accountService.addNewUser("user2", "12345", "user2@gmail.com", "12345");
+			accountService.addNewUser("admin", "12345", "admin@gmail.com", "12345");
+
+			accountService.addRoleToUser("user1", "USER");
+			accountService.addRoleToUser("user2", "USER");
+			accountService.addRoleToUser("admin", "USER");
+			accountService.addRoleToUser("admin", "ADMIN");
+		};
 	}
 }
