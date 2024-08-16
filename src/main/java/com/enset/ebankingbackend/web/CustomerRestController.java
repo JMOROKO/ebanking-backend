@@ -20,7 +20,7 @@ public class CustomerRestController {
 
     @GetMapping("/customers")
     //@PreAuthorize("hasAuthority('SCOPE_USER')") //pour strategie inMemory
-    @PreAuthorize("hasAuthority('SCOPE_USER')")
+    @PreAuthorize("hasAuthority('SCOPE_ROLE_USER')")
     public List<CustomerDTO> customers(){
         return bankAccountService.listCustomers();
     }
@@ -33,26 +33,26 @@ public class CustomerRestController {
     }
 
     @GetMapping("/customers/{id}")
-    @PreAuthorize("hasAuthority('SCOPE_USER')")
+    @PreAuthorize("hasAuthority('SCOPE_ROLE_USER')")
     public CustomerDTO customers(@PathVariable Long id) throws CustomerNotFoundException {
         return bankAccountService.getCustomer(id);
     }
 
     @PostMapping("/customers")
-    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
+    @PreAuthorize("hasAuthority('SCOPE_ROLE_ADMIN')")
     public CustomerDTO saveCustomer(@RequestBody CustomerDTO request){
         return bankAccountService.saveCustomer(request);
     }
 
     @PutMapping("/customers/{id}")
-    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
+    @PreAuthorize("hasAuthority('SCOPE_ROLE_ADMIN')")
     public CustomerDTO updateCustomer(@PathVariable Long id, @RequestBody CustomerDTO request){
         request.setId(id);
         return bankAccountService.updateCustomer(request);
     }
 
     @DeleteMapping("/customers/{id}")
-    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
+    @PreAuthorize("hasAuthority('SCOPE_ROLE_ADMIN')")
     public void deleteCustomer(@PathVariable Long id){
         bankAccountService.deleteCustomer(id);
     }
