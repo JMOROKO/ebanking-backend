@@ -34,7 +34,7 @@ public class EbankingBackendApplication {
 		SpringApplication.run(EbankingBackendApplication.class, args);
 	}
 
-	@Bean
+	// @Bean
 	CommandLineRunner start(BankAccountService bankAccountService, BankAccountMapperImpl dtoMapper){
 		return args -> {
 			Stream.of("Hassan", "Imane", "Mohamed").forEach(name -> {
