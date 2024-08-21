@@ -6,6 +6,7 @@ import com.enset.ebankingbackend.enums.OperationType;
 import com.enset.ebankingbackend.exceptions.BalanceNotSufficentException;
 import com.enset.ebankingbackend.exceptions.BankAccountNotFoundException;
 import com.enset.ebankingbackend.exceptions.CustomerNotFoundException;
+import com.enset.ebankingbackend.exceptions.SameAccountException;
 import com.enset.ebankingbackend.mappers.BankAccountMapperImpl;
 import com.enset.ebankingbackend.repositories.AccountOperationRepository;
 import com.enset.ebankingbackend.repositories.BankAccountRepository;
@@ -153,7 +154,9 @@ public class BankAccountServiceImpl implements BankAccountService{
 
     @Override
     public void transfert(String accountIdSource, String accountIdDestination, double amount, String description)
-            throws BankAccountNotFoundException, BalanceNotSufficentException {
+            throws BankAccountNotFoundException, BalanceNotSufficentException, SameAccountException {
+        if(accountIdSource.equals(accountIdDestination))
+            throw new SameAccountException("Impossible de transférer de l'argent sur le même compte");
         debit(accountIdSource, amount, "Transfert to "+accountIdDestination);
         credit(accountIdDestination, amount, "Transfert from "+accountIdSource);
     }
@@ -202,7 +205,7 @@ public class BankAccountServiceImpl implements BankAccountService{
         if(bankAccount == null){
             throw new BankAccountNotFoundException("Account not found");
         }
-        Page<AccountOperation> accountOperations = accountOperationRepository.findByBankAccountId(accountId, PageRequest.of(page, size));
+        Page<AccountOperation> accountOperations = accountOperationRepository.findByBankAccountIdOrderByOperationDateDesc(accountId, PageRequest.of(page, size));
 
         AccountHistoryDTO accountHistoryDTO = new AccountHistoryDTO(); //accountOperationDTOS
         List<AccountOperationDTO> accountOperationDTOS = accountOperations.getContent().stream()

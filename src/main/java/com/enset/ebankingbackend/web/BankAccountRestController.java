@@ -3,6 +3,7 @@ package com.enset.ebankingbackend.web;
 import com.enset.ebankingbackend.dto.*;
 import com.enset.ebankingbackend.exceptions.BalanceNotSufficentException;
 import com.enset.ebankingbackend.exceptions.BankAccountNotFoundException;
+import com.enset.ebankingbackend.exceptions.SameAccountException;
 import com.enset.ebankingbackend.services.BankAccountService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +12,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@CrossOrigin("*")
+@CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE}, allowedHeaders = "*", exposedHeaders = "Authorization")
 public class BankAccountRestController {
     private BankAccountService bankAccountService;
 
@@ -37,19 +38,19 @@ public class BankAccountRestController {
         return bankAccountService.getAccountHistory(accountId, page, size);
     }
 
-    @PostMapping("/account/debit")
+    @PostMapping("/accounts/debit")
     public DebitDTO debit(@RequestBody DebitDTO debitDTO) throws BankAccountNotFoundException, BalanceNotSufficentException {
         this.bankAccountService.debit(debitDTO.getAccountId(), debitDTO.getAmount(), debitDTO.getDescription());
         return debitDTO;
     }
 
-    @PostMapping("/account/credit")
+    @PostMapping("/accounts/credit")
     public CreditDTO credit(@RequestBody CreditDTO creditDTO) throws BankAccountNotFoundException {
         this.bankAccountService.credit(creditDTO.getAccountId(), creditDTO.getAmount(), creditDTO.getDescription());
         return creditDTO;
     }
-    @PostMapping("/account/transfert")
-    public void transfert(@RequestBody TransfertRequestDTO transfertRequestDTO) throws BankAccountNotFoundException, BalanceNotSufficentException {
+    @PostMapping("/accounts/transfert")
+    public void transfert(@RequestBody TransfertRequestDTO transfertRequestDTO) throws BankAccountNotFoundException, BalanceNotSufficentException, SameAccountException {
         this.bankAccountService.transfert(transfertRequestDTO.getAccountSource(), transfertRequestDTO.getAccountDestination(), transfertRequestDTO.getAmount(), transfertRequestDTO.getDescription());
     }
 }
