@@ -1,9 +1,6 @@
 package com.enset.ebankingbackend.handles;
 
-import com.enset.ebankingbackend.exceptions.BalanceNotSufficentException;
-import com.enset.ebankingbackend.exceptions.BankAccountNotFoundException;
-import com.enset.ebankingbackend.exceptions.CustomerNotFoundException;
-import com.enset.ebankingbackend.exceptions.SameAccountException;
+import com.enset.ebankingbackend.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -65,6 +62,56 @@ public class GlobalExceptionHandler {
     }
     @ExceptionHandler(SameAccountException.class)
     public ResponseEntity<ExceptionRepresentation> handleException(SameAccountException exception) {
+        ExceptionRepresentation representation = ExceptionRepresentation.builder()
+                .errorMessage(exception.getMessage())
+                .build();
+        return ResponseEntity
+                .status(HttpStatus.NOT_ACCEPTABLE)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(representation);
+    }
+    @ExceptionHandler(AppUserNotFoundException.class)
+    public ResponseEntity<ExceptionRepresentation> handleException(AppUserNotFoundException exception) {
+        ExceptionRepresentation representation = ExceptionRepresentation.builder()
+                .errorMessage(exception.getMessage())
+                .build();
+        return ResponseEntity
+                .status(HttpStatus.NOT_ACCEPTABLE)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(representation);
+    }
+    @ExceptionHandler(PasswordNotMatchException.class)
+    public ResponseEntity<ExceptionRepresentation> handleException(PasswordNotMatchException exception) {
+        ExceptionRepresentation representation = ExceptionRepresentation.builder()
+                .errorMessage(exception.getMessage())
+                .build();
+        return ResponseEntity
+                .status(HttpStatus.NOT_ACCEPTABLE)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(representation);
+    }
+    @ExceptionHandler(UserAlreadyExistException.class)
+    public ResponseEntity<ExceptionRepresentation> handleException(UserAlreadyExistException exception) {
+        ExceptionRepresentation representation = ExceptionRepresentation.builder()
+                .errorMessage(exception.getMessage())
+                .build();
+        return ResponseEntity
+                .status(HttpStatus.NOT_ACCEPTABLE)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(representation);
+    }
+    @ExceptionHandler(RoleIsBlankException.class)
+    public ResponseEntity<ExceptionRepresentation> handleException(RoleIsBlankException exception) {
+        ExceptionRepresentation representation = ExceptionRepresentation.builder()
+                .errorMessage(exception.getMessage())
+                .build();
+        return ResponseEntity
+                .status(HttpStatus.NOT_ACCEPTABLE)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(representation);
+    }
+    @ExceptionHandler(RoleIsNotExistException.class)
+    public ResponseEntity<ExceptionRepresentation> handleException(RoleIsNotExistException exception) {
         ExceptionRepresentation representation = ExceptionRepresentation.builder()
                 .errorMessage(exception.getMessage())
                 .build();

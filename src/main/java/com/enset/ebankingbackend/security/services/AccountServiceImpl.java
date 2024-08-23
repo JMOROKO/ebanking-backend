@@ -65,7 +65,7 @@ public class AccountServiceImpl implements AccountService {
 
         AppRole appRole = appRoleRepository.findById(role).orElse(null);
         if(appRole == null){
-            throw new RuntimeException("This role is allready existe");
+            throw new RuntimeException("This role is not existe");
         }
 
         appUser.getRoles().add(appRole);
